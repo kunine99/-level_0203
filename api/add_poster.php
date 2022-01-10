@@ -16,5 +16,5 @@ if(isset($_FILES['path']['tmp_name'])){
 to("../back.php?do=poster");
 
 
-
-INSERT INTO `poster` (`id`, `path`, `name`, `rank`, `sh`, `ani`) VALUES (NULL, '123', '123', '0', '1', '1')
+//資料庫poster資料表隨便加一筆複製
+// INSERT INTO `poster` (`id`, `path`, `name`, `rank`, `sh`, `ani`) VALUES (NULL, '123', '123', '0', '1', '1')
