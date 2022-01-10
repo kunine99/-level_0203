@@ -1,6 +1,6 @@
 <!-- 如果你有登入就看到這一坨，沒登入就看到登入畫面  這個方法不行，不要用，改用session-->
 <?php
-session_start();
+// session_start();  base.php已經引入了所以這裡可以刪掉了
 if(!empty($_POST)){
     if($_POST['acc']=='admin' && $_POST['pw']=='1234'){
       $_SESSION['login']='admin';
