@@ -8,6 +8,27 @@
 $mos=$Movie->all(" ORDER BY rank");
 
 foreach ($mos as $key => $movie) {
+// back的poster.php複製來的
+$mos=$Poster->all(" ORDER by `rank`");
+            foreach($mos as $key => $row){
+                $checked=($row['sh']==1)?"checked":"";
+                // mos是二微陣列，每一筆都慧倫一次把變數給row
+                // 但沒有key 來當index(索引值?)? 
+            if($key==0){
+                $up=$row['id'] . "-" . $row['id'];
+                $down=$row['id'] . "-" . $mos[$key+1]['id'];
+            }
+
+            if($key==(count($mos)-1)){
+                $down=$row['id'] . "-" . $row['id'];
+                $up=$row['id'] . "-" . $mos[$key-1]['id'];
+            }
+
+            if($key>0 && $key<(count($mos)-1)){
+               $up=$row['id'] . "-" . $mos[$key-1]['id'];
+               $down=$row['id'] . "-" . $mos[$key+1]['id'];
+            }
+
 
 ?>
 
@@ -26,7 +47,9 @@ foreach ($mos as $key => $movie) {
         <div style="width:33%">上映時間:<?=$movie['ondate'];?></div>
     </div>
     <div style="text-align:right">
-        <button>顯示</button>
+    <button class="show" data-id="<?=$movie['id'];?>">
+            <?=($movie['sh']==1)?"顯示":"隱藏";?>
+        </button>
         <button>往上</button>
         <button>往下</button>
         <button>編輯電影</button>
@@ -43,5 +66,15 @@ foreach ($mos as $key => $movie) {
 <?php
 }
 ?>
+</div>
 
+<script>
+$(".show").on("click",function(){
+    let id=$(this).data("id");
+    $.post("api/show.php",{id},()=>{
+        location.reload();
+    })
+})
+
+</script>
 </div>
