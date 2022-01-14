@@ -67,14 +67,28 @@ $mos=$Poster->all(" ORDER by `rank`");
 }
 ?>
 </div>
+</div>
 
 <script>
-$(".show").on("click",function(){
-    let id=$(this).data("id");
+$(".show").on("click",function(e){
+    let id=$(e.target).data("id");
     $.post("api/show.php",{id},()=>{
         location.reload();
     })
 })
+/* $(".show").on("click",(e)=>{
+    let id=$(e.target).data("id");
+    $.post("api/show.php",{id},()=>{
+        location.reload();
+    })
+}) */
 
+
+/* $(".show").on("click",function(){
+   
+    let id=$(this).data("id");
+    $.post("api/show.php",{id},()=>{
+        location.reload();
+    })
+}) */
 </script>
-</div>
