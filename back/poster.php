@@ -39,8 +39,8 @@
                 <div style="width:25%;">
                     <input type="text" name="name[]" value="<?=$row['name'];?>"></div>
                     <div style="width:25%;">
-                    <input type="button" value="往上" data-sw="<?=$up;?>">
-                    <input type="button" value="往下" data-sw="<?=$down;?>">
+                    <input type="button" class="sw" value="往上" data-sw="<?=$up;?>">
+                    <input type="button" class="sw" value="往下" data-sw="<?=$down;?>">
                 </div>
                 <div style="width:25%;">
                     <input type="checkbox" name="sh[]" value="<?=$row['id'];?>" <?=$checked;?>>顯示
@@ -65,26 +65,38 @@
 </div>
 <hr>
 <div>
-<h4 class='ct'>新增預告片海報</h4>
-<form action="api/add_poster.php" method="post" enctype="multipart/form-data">
-    <div class="ct">
-        <label >
-            預告片海報:
-            <input type="file" name="path">
-        </label>
-        <label >
-            預告片片名:
-            <input type="text" name="name">
-        </label>
-    </div>
-    <div class="ct">
-        <input type="submit" value="新增">
-        <input type="reset" value="重置">
-    </div>
-</form>
+    <h4 class='ct'>新增預告片海報</h4>
+    <form action="api/add_poster.php" method="post" enctype="multipart/form-data">
+        <div class="ct">
+            <label >
+                預告片海報:
+                <input type="file" name="path">
+            </label>
+            <label >
+                預告片片名:
+                <input type="text" name="name">
+            </label>
+        </div>
+        <div class="ct">
+            <input type="submit" value="新增">
+            <input type="reset" value="重置">
+        </div>
+    </form>
 </div>
 
+<script>
+    // 用EXPLODE.  比如後面接檔名可以把黨名跟副檔名拆開變陣列
+    $('.sw').on('click',function(){
+        let id=$(this).data("sw").split("-");
+        // 用GET 會得到很像陣列的字串，所以用POST才行得通
+        // 送出id跟table 告訴我你是哪一個要做交換
+        $.post("api/sw.php",{id,table:"poster"},()=>{
+            // reload = 當前頁重整(像f5一樣)   
+            location.reload();
+        })
+    })
 
+</script>
 
 
 
