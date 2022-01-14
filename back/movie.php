@@ -30,6 +30,7 @@ foreach ($mos as $key => $movie) {
         <button>往上</button>
         <button>往下</button>
         <button>編輯電影</button>
+        <button onclick="location.href='?do=edit_movie&id=<?=$movie['id'];?>'">編輯電影</button>
         <button>刪除電影</button>
 
     </div>
