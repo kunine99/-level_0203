@@ -16,7 +16,9 @@
         <br>
         <br>
         <p style="margin:10px 3px 3px 3px; word-break:break-all"> 劇情簡介：<br>
-        </p>
+        <?=$row['intro'];?>
+  
+      </p>
         </font>
         <table width="100%" border="0">
           <tbody>
