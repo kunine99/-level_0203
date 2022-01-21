@@ -4,6 +4,14 @@ include_once "../base.php";
 $movie=$Movie->find($_GET['id']);
 $date=$_GET['date'];
 $session=$ss[$_GET['session']];
+
+
+// 合併陣列 php怎麼做
+$ords=$Ord->all(['movie'=>$movie['name'],'date'=>$date,'session'=>$session]);
+$seats=[];
+foreach($ords as $ord){
+   $seats=array_merge($seats,unserialize($ord['seat']));
+}
 ?>
 
 
@@ -50,12 +58,14 @@ $session=$ss[$_GET['session']];
     <?php
 
 for($i=0;$i<20;$i++){
-    echo "<div class='seat null'>";
+    $booked=in_array($i,$seats)?'booked':'null';
+        echo "<div class='seat $booked'>";
     echo "  <div class='ct'>";
     echo    (floor($i/5)+1). "排".($i%5 +1)."號";
     echo "  </div>";
-    echo "<input type='checkbox' name='check' class='check' value='$i'>";
-    echo "</div>";
+    if(!in_array($i,$seats)){
+        echo "<input type='checkbox' name='check' class='check' value='$i'>";
+    }    echo "</div>";
 }
 ?>
 </div>
@@ -66,13 +76,14 @@ for($i=0;$i<20;$i++){
     <div>您已經勾選了<span id="tickets"></span>張票，最多可以購買四張票</div>
     <div>
         <button onclick="prev()">回上一步</button>
-        <button >完成訂購</button>
-    </div>
+        <!-- 完成之後要做出送出訂單的動作 -->
+        <button onclick="order()">完成訂購</button>    </div>
 </div>
 
 
 <script>
     let seats=new Array();
+    // 我把一個東西序列化
     
     $(".check").on('click',function(){
         if($(this).prop('checked')){
@@ -88,6 +99,16 @@ for($i=0;$i<20;$i++){
             seats.splice(seats.indexOf($(this).val()),1)
         }
         $("#tickets").text(seats.length)
+        function order(){
+    let order={id:$("#movie").val(),
+               date:$("#date").val(),
+               session:$("#session").val(),
+               seats}
+
+    $.post('api/order.php',order,(result)=>{
+        $("#mm").html(result)
+    })
+}
     })
     
 </script>
