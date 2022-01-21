@@ -1,6 +1,8 @@
 <?php
 
 $movie=$Movie->find($_GET['id']);
+$day=date("j",strtotime($movie['ondate']));
+$month=date("n",strtotime($movie['ondate']));
 ?>
 
 <h3 class='ct'>編輯院線片</h3>
@@ -35,14 +37,16 @@ $movie=$Movie->find($_GET['id']);
                 <select name="month">
                 <?php
                     for($i=1;$i<=12;$i++){
-                        echo "<option value='$i'>$i</option>";
+                        $selected=($i==$month)?"selected":"";
+                        echo "<option value='$i' $selected>$i</option>";
                     }
                     ?>
                 </select>月
                 <select name="day">
                     <?php
                     for($i=1;$i<=31;$i++){
-                        echo "<option value='$i'>$i</option>";
+                        $selected=($i==$day)?"selected":"";
+                        echo "<option value='$i' $selected>$i</option>";
                     }
                     ?>
                 </select>日
