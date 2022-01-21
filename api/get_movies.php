@@ -1,6 +1,7 @@
 <?php 
 include_once "../base.php";
 $id=$_GET['id'];
+// front/movie.php 複製來的
 $today=date("Y-m-d");
 $ondate=date("Y-m-d",strtotime("-2 days"));
 // $id等於我用get取得的資料

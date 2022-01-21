@@ -1,4 +1,6 @@
 <!-- 訂票 -->
+<h3 class='ct'>線上訂票</h3>
+
 <style>
     #order{
         width:50%;
@@ -36,17 +38,21 @@
     </div>
     <div class="row">
         <div class="ct" style="width:100%">
-            <button>確定</button><button>重置</button>
+        <button onclick="booking()">確定</button>
+        <button onclick="reset()">重置</button>
         </div>
         
     </div>
 </div>
+
+<div id="booking" style="display:none"></div>
+<!-- 預設他是隱藏的 -->
 <script>
 let id=(new URL(location)).searchParams.get('id');
 getMovies(id)
 
     // js裡小括號()包起來的東西基本上都會當成是一個程式，然後傳出去的會回傳給小括號...?
-function getMovies(id){
+// function getMovies(id){
 
     // ajax 後端要有個api 前端要有ajs?
     // $.get("api/get_movies.php",(movies)=>{
@@ -55,6 +61,22 @@ function getMovies(id){
 
 
 $("#movie").on("change",()=>{getDays()})
+function booking(){
+    $("#order,#booking").toggle()
+    let order={id:$("#movie").val(),
+               date:$("#date").val(),
+               session:$("#session").val()}
+    $.get("api/booking.php",order,(booking)=>{
+        $("#booking").html(booking)
+    })
+}
+function reset(){
+    getMovies(id)
+}
+function prev(){
+    $("#order,#booking").toggle()
+    $("#booking").html("");
+}
 function getMovies(id){
     $.get("api/get_movies.php",{id},(movies)=>{
         $("#movie").html(movies)
@@ -75,7 +97,7 @@ function getSessions(){
         $("#session").html(sessions)
     })
 }
-}
+// }
 
 
 
