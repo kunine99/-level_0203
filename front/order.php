@@ -61,6 +61,7 @@ getMovies(id)
 
 
 $("#movie").on("change",()=>{getDays()})
+$("#date").on("change",()=>{getSessions()})
 function booking(){
     $("#order,#booking").toggle()
     let order={id:$("#movie").val(),

@@ -1,3 +1,4 @@
+<!-- 等於20會跑21個，所以<20才對 -->
 <?php
 include_once "../base.php";
 $movie=$Movie->find($_GET['id']);
@@ -5,7 +6,6 @@ $date=$_GET['date'];
 $session=$ss[$_GET['session']];
 ?>
 
-<!-- 等於20會跑21個，所以<20才對 -->
 
 
 <style>
@@ -45,9 +45,6 @@ $session=$ss[$_GET['session']];
         bottom:5px;
     }
     </style>
-    
-<!-- 如果我點下去的屬性是true的話我就做這些事情 -->
-<!-- 如果不是我就從陣列裡面刪除 -->
 
 <div id="seats">
     <?php
@@ -72,3 +69,25 @@ for($i=0;$i<20;$i++){
         <button >完成訂購</button>
     </div>
 </div>
+
+
+<script>
+    let seats=new Array();
+    
+    $(".check").on('click',function(){
+        if($(this).prop('checked')){
+            if(seats.length<4){
+                // 如果我點下去的屬性是true的話我就做這些事情
+                seats.push($(this).val())
+            }else{
+                alert("最多只能勾選四張票")
+                // 如果不是我就從陣列裡面刪除 
+                $(this).prop('checked',false)
+            }
+        }else{
+            seats.splice(seats.indexOf($(this).val()),1)
+        }
+        $("#tickets").text(seats.length)
+    })
+    
+</script>
