@@ -42,8 +42,36 @@
     </div>
 </div>
 <script>
+let id=(new URL(location)).searchParams.get('id');
+getMovies(id)
+
+    // js裡小括號()包起來的東西基本上都會當成是一個程式，然後傳出去的會回傳給小括號...?
+function getMovies(id){
+
     // ajax 後端要有個api 前端要有ajs?
-    $.get("api/get_movies.php",(movies)=>{
+    // $.get("api/get_movies.php",(movies)=>{
+    //     $("#movie").html(movies)
+    // })
+
+
+$("#movie").on("change",()=>{getDays()})
+function getMovies(id){
+    $.get("api/get_movies.php",{id},(movies)=>{
         $("#movie").html(movies)
+        getDays()
     })
+}
+function getDays(){
+    let id=$("#movie").val();
+    $.get("api/get_days.php",{id},(days)=>{
+        $("#date").html(days)
+    })
+}
+}
+
+
+
+// 這邊可以不用帶參數，因為裡面的東西是根據我選擇的狀況
+
+
     </script>
