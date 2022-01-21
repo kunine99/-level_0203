@@ -65,6 +65,14 @@ function getDays(){
     let id=$("#movie").val();
     $.get("api/get_days.php",{id},(days)=>{
         $("#date").html(days)
+        getSessions();
+    })
+}
+function getSessions(){
+    let id=$("#movie").val();
+    let date=$("#date").val();
+    $.get("api/get_sessions.php",{id,date},(sessions)=>{
+        $("#session").html(sessions)
     })
 }
 }
