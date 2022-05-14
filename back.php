@@ -31,16 +31,8 @@
         </div>
         <div id="mm">
         <?php
-            $do=$_GET['do']??'main';
-            $file='back/'.$do.".php";
-            // 如果檔案存在就幫我include
-            if(file_exists($file)){
-              include $file;
-            }else{
-              // 如果檔案沒有存在的話
-              // 這樣的寫法可以避免如果有人想要去串別的值得話，他不會找到別的檔案，一定都會到main這邊來
-              include 'back/main.php';
-            }
+
+        include "back/main.php";
 
 
 ?>
