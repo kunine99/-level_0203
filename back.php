@@ -30,7 +30,7 @@
         <div id="mm">
         <?php
             $do=$_GET['do']??'main';
-            $file='front/'.$do.".php";
+            $file='back/'.$do.".php";
             // 如果檔案存在就幫我include
             if(file_exists($file)){
               include $file;
