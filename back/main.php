@@ -1,4 +1,3 @@
-測試
 <!-- 如果你有登入就看到這一坨，沒登入就看到登入畫面  這個方法不行，不要用，改用session-->
 <?php
 //  session_start();  base.php已經引入了所以這裡可以刪掉了
@@ -42,9 +41,7 @@ if (isset($_SESSION['login'])) {
         echo "</div>";
     }
     ?>
-<div class="rb tab">
-    <h2 class="ct">請選擇所需功能</h2>
-</div>
+
 <?php
 } else {
 ?>
