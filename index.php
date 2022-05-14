@@ -18,37 +18,27 @@
     <a href="03P01.htm">首頁</a> 
     <a href="index.php">線上訂票</a> 
     <a href="#">會員系統</a> 
-    <a href="03P03.htm">管理系統</a> 
+    <a href="back.php">管理系統</a> 
   </div>
   <div id="text"> <span class="ct">最新活動</span>
     <marquee direction="right">
     ABC影城票價全面八折優惠1個月
     </marquee>
   </div>
-  <div id="mm">
-    <div class="half" style="vertical-align:top;">
-      <h1>預告片介紹</h1>
-      <div class="rb tab" style="width:95%;">
-        <div id="abgne-block-20111227">
-          <ul class="lists">
-          </ul>
-          <ul class="controls">
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="half">
-      <h1>院線片清單</h1>
-      <div class="rb tab" style="width:95%;">
-        <table>
-          <tbody>
-            <tr> </tr>
-          </tbody>
-        </table>
-        <div class="ct"> </div>
-      </div>
-    </div>
-  </div>
+<?php
+$do=$_GET['do']??'main';
+$file='front/'.$do.".php";
+// 如果檔案存在就幫我include
+if(file_exists($file)){
+  include $file;
+}else{
+  // 如果檔案沒有存在的話
+  // 這樣的寫法可以避免如果有人想要去串別的值得話，他不會找到別的檔案，一定都會到main這邊來
+  include 'front/main.php';
+}
+
+
+?>
   <div id="bo"> ©Copyright 2010~2014 ABC影城 版權所有 </div>
 </div>
 </body>

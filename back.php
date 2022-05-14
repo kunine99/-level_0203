@@ -17,7 +17,7 @@
             <h1>ABC影城</h1>
         </div>
         <div id="top2">  
-          <a href="03P01.htm">首頁</a>
+          <a href="index.php">首頁</a>
           <a href="index.php">線上訂票</a> 
           <a href="#">會員系統</a> 
           <a href="03P03.htm">管理系統</a>
@@ -28,13 +28,21 @@
             </marquee>
         </div>
         <div id="mm">
-            <div class="ct a rb" style="position:relative; width:101.5%; left:-1%; padding:3px; top:-9px;"> 
-            <a  href="?do=admin&redo=tit">網站標題管理</a>| <a href="?do=admin&redo=go">動態文字管理</a>| 
-            <a  href="?do=admin&redo=rr">預告片海報管理</a>| <a href="?do=admin&redo=vv">院線片管理</a>| 
-            <a  href="?do=admin&redo=order">電影訂票管理</a> </div>
-            <div class="rb tab">
-                <h2 class="ct">請選擇所需功能</h2>
-            </div>
+        <?php
+            $do=$_GET['do']??'main';
+            $file='front/'.$do.".php";
+            // 如果檔案存在就幫我include
+            if(file_exists($file)){
+              include $file;
+            }else{
+              // 如果檔案沒有存在的話
+              // 這樣的寫法可以避免如果有人想要去串別的值得話，他不會找到別的檔案，一定都會到main這邊來
+              include 'back/main.php';
+            }
+
+
+?>
+            
         </div>
         <div id="bo"> ©Copyright 2010~2014 ABC影城 版權所有 </div>
     </div>
