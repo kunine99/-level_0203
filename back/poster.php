@@ -73,8 +73,9 @@
                     <div style="width:25%;"> 
                         <!-- 用input 的方式告訴他type是button 
                             按下去的時候要跟誰做交換 data-sw控制-->
-                    <input type="button" value="往上" data-sw="<?=$up;?>">
-                    <input type="button" value="往下" data-sw="<?=$down;?>">
+                        <!-- 取得我點下的按鈕 -->
+                    <input type="button" class="sw" value="往上" data-sw="<?=$up;?>">
+                    <input type="button" class="sw" value="往下" data-sw="<?=$down;?>">
                     </div>
                     <div style="width:25%;">
                         <!-- 如果我是顯示的這邊就會打勾，如果我不是顯示的這邊就不會打勾 
@@ -139,3 +140,32 @@
         </div>
     </form>
 </div>
+
+
+<script>
+    //兩個id做交換
+    //想要兩個變數交換的話，要多一個暫存用的變數，再把值做交換
+    //當我的sw被點的時候
+    $('.sw').on('click',function(){
+        
+        //用explode再加上- 就可以把字串拆成陣列，陣列裡面就是我-的前後兩個單位
+        //像是用explode拆檔案的副檔名 檔案.副檔名 這樣
+        //或是用explode拆日期 用/把日期拆成年月日，然後ˇ放在陣列裡面的這三個位置
+        
+        //$(this) 我點下去的這個事件它裡面會有一個.data("sw")
+        //js中分割字串 split
+        // let id=$(this).data("sw");
+        // console.log(id);
+        let id=$(this).data("sw").split("-");
+        // console.log(id);
+
+        // 考慮到院線片也會用到這個交換功能，而我們撈出資料就需要知道他是哪張資料表
+        // 如果這邊寫死的話，院線片那邊就要再寫一個switch很麻煩，所以前端除了送出id外還要再送出一個table
+        // 告訴我你是哪一張table的id要做交換，這邊就是poster這張資料表要做交換
+        //做完之後重整 reload=當前頁重整
+         $.post("api/sw.php",{id,table:"level3_poster"},()=>{
+            location.reload();
+        })
+    })
+
+</script>
