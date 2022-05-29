@@ -13,7 +13,7 @@
             // 我全部的資料=$Poster去撈出我全部的資料
             // 用rank這個值來做排序
             $rows = $Poster->all(" ORDER by `rank`");
-            foreach ($rows as $row) {
+            foreach ($rows as $key => $row) {
                 //我們要去告訴他有沒有哪個是被選擇的跟checkbox一樣，下拉選單的部分我們是用選擇
                 //checkbox跟radio我們是用checked，選單用的是selected
                 
@@ -21,6 +21,47 @@
                 //如果$row的['sh']==1的話，我就顯示checked，不然我就顯示空字串
                 //然後把$checked放到下方的顯示
                 $checked=($row['sh']==1)?"checked":"";
+                    // 陣列的第一筆資料使用...判斷，但這邊沒有key值所以我們自己加上去
+                    // 我要判斷他是不是第一筆的重點就來自於這個key值
+
+                    // $key==0表示是第一筆
+                    if($key==0){    
+                        //如果他是第一欄的話，跟自己的id(值)交換(不會有排序的問題)
+                        $up=$row['id'] . "-" . $row['id'];
+                        //往下
+                        //現在的情況像是大家本來按照座號做，但後來序號被打亂全部人亂坐，但我們還是想知道左右邊是坐誰
+                        //不可以寫$row['id']+1，這樣代表當前rank排序1的第一筆資料的id直接+1 ，這樣會因撞id出錯
+                        //第一個的索引值+1
+                        //rows是一個二微陣列，我現在在的這筆資料是每一筆都會回圈一次然後把資料給$row這個變數
+                        //所以我不管在何時，我所輪到的那筆資料都是$rows[$key]的這筆資料，我的迴圈的每一筆的值都是$rows[$key]這筆資料
+                        //我現在迴圈到的這個row 我要他的下一筆就是我的$rows現在輪到的這筆資料[$key(索引值) 要+1 ]，知道下一筆後我要的是他的['id']
+                        $down=$row['id'] . "-" . $rows[$key+1]['id'];
+                    }
+                    
+                    //最後一筆，找索引值的最大值
+                    //陣列長度-1就是索引值，我們知道陣列的索引值是從0開始的
+                    //比如有1,2,3,4,5個東西，但索引值會是0,1,2,3,4
+                    //所以最大的索引值會跟陣列個數差1，而長度-1就能找到最大索引值
+
+                    //如果我的key值=長度(陣列長度在php用count函式)，count我的$rows這個陣列裡面的值的個數 -1就會拿到值
+                    //php array index max  查到的max(array_keys($arr)); 也可以
+                    if($key==(count($rows)-1)){
+                        //往下，跟自己交換
+                        $down=$row['id'] . "-" . $row['id'];
+                        // 我的上一筆是我的$key-1,注意如果只有一筆資料的話這個程式會出錯
+                        // 這個方法來說要有2筆資料，不然往上跟往下的功能都會出錯，3筆的話這個功能才會正常
+                        // 實務上如果遇到只有一筆資料卻要往上往下的功能的話,就要加判斷我到底有沒有上一筆/下一筆
+                        $up=$row['id'] . "-" . $rows[$key-1]['id'];
+                    }
+
+                    //中間一筆
+                    if($key>0 && $key<(count($rows)-1)){
+                        $up=$row['id'] . "-" . $rows[$key-1]['id'];
+                        //變數記得改成$rows
+                        $down=$row['id'] . "-" . $rows[$key+1]['id'];
+                    }
+
+
                 ?>
                 <div style="display:flex" class="ct">
                     <div style="width:25%;">
@@ -29,7 +70,12 @@
                     <div style="width:25%;">
                         <input type="text" name="name[]" value="<?= $row['name']; ?>">
                     </div>
-                    <div style="width:25%;"><?= $row['rank']; ?></div>
+                    <div style="width:25%;"> 
+                        <!-- 用input 的方式告訴他type是button 
+                            按下去的時候要跟誰做交換 data-sw控制-->
+                    <input type="button" value="往上" data-sw="<?=$up;?>">
+                    <input type="button" value="往下" data-sw="<?=$down;?>">
+                    </div>
                     <div style="width:25%;">
                         <!-- 如果我是顯示的這邊就會打勾，如果我不是顯示的這邊就不會打勾 
                              因為這東西是在外部的，所以記得是< ?=$checked;?>，不要打成$checked
