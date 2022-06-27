@@ -27,7 +27,9 @@
                     <button>顯示</button>
                     <button>往上</button>
                     <button>往下</button>
-                    <button>編輯電影</button>
+                    <!--修改跟新增很像，差別在於修改時要跟他說你要修改的是哪部電影
+                        所以複製最上面的新增電影改成修改再告訴他id-->
+                    <button onclick="location.href='?do=edit_movie&id=<?=$movie['id'];?>'">編輯電影</button>
                     <button>刪除電影</button>
 
                 </div>
