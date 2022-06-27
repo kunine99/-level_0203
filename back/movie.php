@@ -55,14 +55,43 @@
 </div>
 
 <script>
-// 當show被點下去的時候，我會拿到我的id
-$(".show").on("click",function(){
-    let id=$(this).data("id");
-    // 我哪一筆資料要顯示隱藏就把這個資料丟到後台去
-    //因為只有這個地方要用到所以可以不用加table，只帶id過去就好了
+    // 回乎函式不管是用function()還是箭頭函式
+    // ()裡面都可以帶入e或是event，隨便你取都可以
+    // cosole.log(e)可以看到很多東西
+    //cosole.log(e.target)可以看到你點下的東西
+$(".show").on("click",function(e){
+
+    let id=$(e.target).data("id");
     $.post("api/show.php",{id},()=>{
         location.reload();
     })
 })
+
+/* 
+
+//如果想要箭頭函示比較潮，可以用這種箭頭函式
+//不用的話就用$thisO(原本的寫法)
+
+// 這個寫法跟下面不同的是它是沒有使用this去抓到要的東西
+// $this在長久的js運作有時會出問題，所以盡量避免
+// 所以事件型的回乎函式都可以拿它來用
+    $(".show").on("click",(e)=>{
+    let id=$(e.target).data("id");
+    $.post("api/show.php",{id},()=>{
+        location.reload();
+    })
+}) */
+
+
+// 原本的寫法
+// 當show被點下去的時候，我會拿到我的id
+// $(".show").on("click",function(){
+    // let id=$(this).data("id");
+// 我哪一筆資料要顯示隱藏就把這個資料丟到後台去
+// 因為只有這個地方要用到所以可以不用加table，只帶id過去就好了
+//     $.post("api/show.php",{id},()=>{
+//         location.reload();
+//     })
+// })
 
 </script>
