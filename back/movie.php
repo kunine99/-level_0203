@@ -30,8 +30,11 @@
                     <!--修改跟新增很像，差別在於修改時要跟他說你要修改的是哪部電影
                         所以複製最上面的新增電影改成修改再告訴他id-->
                     <button onclick="location.href='?do=edit_movie&id=<?=$movie['id'];?>'">編輯電影</button>
-                    <button>刪除電影</button>
-
+                    <!-- 請你去刪除某張table的某個id的資料 
+                         我會去告訴你哪個table哪個id的訊息，你就去刪了它
+                         'movie'就是table名稱，id就是$movie['id']
+                          function雖然也可以寫在下面，但因為別的地方也會用到，所以寫在外部比較好-->
+                    <button onclick="del('level3_movie',<?=$movie['id'];?>)">刪除電影</button>
                 </div>
                 <div>
                     劇情介紹：<?= $movie['intro']; ?>
