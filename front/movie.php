@@ -34,15 +34,24 @@
             // 開始的時間是今天減兩天
             $ondate=date("Y-m-d",strtotime("-2 days"));
             //分頁
+            
+            // 要記數所以用count,記數的欄位是全部*，條件不需要Order By我只是要計算總數,所以只要知道哪些資料要撈出來排序就好
+            $all=$Movie->math('count','*'," where `sh`=1 && `ondate` BETWEEN '$ondate' AND '$today'");
+            $div=4; //每一頁四筆
+            // 拿到這兩個數字後就可以來算總頁數了
+            $pages=ceil($all/$div); //總頁數 ceil取天花板($all)和$div
+            //從第一頁開始算,然後看我有沒有帶$_GET的這個變數,如果有p這個變數的話就是當前頁,沒有的話就在第一頁
+            $now=$_GET['p']??1; //我現在的頁數 三元運算式縮寫法
+            //從我現在的頁數-1去*$div,-1是因為資料是從零開始算的
+            //-1之後如果在第一頁的話就是從0筆開始算4筆就是 0 1 2 3
+            $start=($now-1)*$div; //我開始的筆數 
+            //把資料帶進來,Order By完之後我告訴他，
+            //在你前面的條件完成之後我只取$start開始的索引值一直到$div的筆數的資料才是我要的
+            $rows=$Movie->all(" where `sh`=1 && `ondate` BETWEEN '$ondate' AND '$today' 
+                                Order By `rank` 
+                                limit $start,$div");
 
-            //這樣寫也可以，但容易寫錯
-            // $rows=$Movie->all(" where `sh`=1 && `ondate` <= '".date("Y-m-d")."' && `ondate` >= '".date("Y-m-d",strtotime("-2 days"))."' Order By `rank`");
 
-            // sql語法 between 第一個值一定要比較小，第2個要比較大
-
-            //我要找出很多筆資料，這邊直接寫句子的語法來使用，貼在select * form table後面，用字串的方式來處理
-            //當我的顯示的欄位是1的時候，而且我的上印日期在兩天前到今天之間，這三天的時間的電影用rank來排序
-            $rows=$Movie->all(" where `sh`=1 && `ondate` BETWEEN '$ondate' AND '$today' Order By `rank`");
 
             foreach($rows as $key => $row){
         ?>
@@ -67,6 +76,41 @@
         ?>
         </div>
 
-        <div class="ct">< 1 2 3 ></div>
+        <div class="ct"  >
+            <!-- 分頁，我要秀箭頭符號跟數字 -->
+            <?php
+            //如果我的當前頁-1>0 表示我有上一頁
+            if(($now-1)>=1){
+                // $prev 我的上一頁=$now-1
+                $prev=$now-1;
+                echo "<a href='index.php?p=$prev'  style='color:white'> ";
+                echo " < ";
+                echo " </a>";
+            }
+
+            // 1 2 3 4用for迴圈來做,從第一頁開始算
+            // $i會<=我的總頁數
+            for($i=1;$i<=$pages;$i++){
+                // 當前頁放大，是不是跟我的迴圈在跑的當前頁一樣,是的話24px 不是的話16px
+                $size=($now==$i)?"24px":"16px"; 
+                echo "<a href='index.php?p=$i' style='font-size:$size'> ";
+                //當前頁的內容
+                echo $i;
+                echo " </a>";
+            }
+
+            // 我現在的頁面+1，然後它不能夠超過我的總頁數(最多只能=我的總頁數)
+            if(($now+1)<=$pages){
+                // $next 我的下一頁=$now-1
+                $next=$now+1;
+                echo "<a href='index.php?p=$next'  style='color:white' > ";
+                echo " > ";
+                echo " </a>";
+            }
+
+
+            ?>
+
+        </div>
     </div>
 </div>
