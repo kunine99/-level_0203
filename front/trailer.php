@@ -55,7 +55,7 @@
         width: 80px;
         flex-shrink: 0;
         padding: 5px;
-        position: relative; 
+        position: relative;
     }
 
     .left {
@@ -129,9 +129,9 @@
     // eq 指定 =誰的意思，這邊就是說整個po裡面第幾個要顯示出來
     $(".po").eq(0).show();
 
-    let i = 0; 
+    let i = 0;
     //為了告訴它有多少個(避免超過),所以設all告訴他總共有幾張海報
-    let all = $('.po').length; 
+    let all = $('.po').length;
 
     // 通常我們在做setInterval時我們會習慣在前面放個變數
     // setInterval會帶入兩個參數,一個是你要執行的程式(用回乎函式來做) 一個是間格多久一次
@@ -159,7 +159,8 @@
         // 下一張的這個i值,就可以拿到標籤裡面的data('ani')的值
         // 拿到值要給它個變數,這樣它才能做切換
         let ani = $(".po").eq(n).data('ani');
-        let now = $(".po:visible") //visible可以幫我抓到當下display:block的元素是哪一個
+         //visible可以幫我抓到當下display:block的元素是哪一個
+        let now = $(".po:visible")
         //上面有解決最後一張的問題所以這邊可以直接寫eq(n)(如果上面沒有檔這邊就要特別注意!!!!!!!!!!!!!!!!!!!!這點很重要,因為)
         let next = $(".po").eq(n)
 
@@ -188,7 +189,8 @@
         }
     }
 
-    let p = 0; //從0開始算頁數,最多可以點幾下
+    //從0開始算頁數,最多可以點幾下
+    let p = 0; 
     // 當我去點擊left跟right的時候,會產生一個function
     // 為了要判斷我點的是左邊還是右邊,我們利用class的名稱
     $(".left,.right").on("click", function() {
@@ -198,9 +200,9 @@
             if (p - 1 >= 0) {
                 p--;
             }
-        // 沒有class就是右邊(下一頁)
+            // 沒有class就是右邊(下一頁)
         } else {
-        // 如果p+1 < 總數
+            // 如果p+1 < 總數
             if (p + 1 <= all - 4) {
                 p++;
             }
@@ -212,5 +214,26 @@
         $(".icon").animate({
             right: p * 80
         }, 500)
+    })
+
+    // 當我點下去時,請先把動畫停下來
+    $(".icon").on("click", function() {
+        // 把動畫清掉
+        clearInterval(slides)
+        let idx = $(this).index()
+        // ani裡面的idx就是用來重新設定我的下一張圖片(還要順便重新設定順序)
+        ani(idx)
+        
+        // 跑完轉場之後,請把i重新設回我的idx
+        i = idx
+
+        // 回復我的動畫(複製上面的程式)
+        slides = setInterval(() => {
+            i++;
+            if (i > all - 1) {
+                i = 0;
+            }
+            ani(i);
+        }, 2500);
     })
 </script>
