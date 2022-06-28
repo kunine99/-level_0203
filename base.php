@@ -14,6 +14,8 @@ class DB{
     protected $pw='';
     protected $pdo;
     protected $table;
+    //物件裡面的東西是自己一類，它不會跟外部的有衝突，所以這邊取level也不會跟外部的衝突到
+    //之後寫一個function,如果你對我做一個level的查詢，我就回給你一個相對應的文字
     protected $level=[1=>'普遍級',2=>"保護級",3=>"輔導級",4=>"限制級"];
 
     public function __construct($table){
@@ -130,7 +132,17 @@ class DB{
     public function q($sql){
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
+
    //回傳分級文字
+   //我有一個public function就叫做level
+   //屬性level跟我的function可以同名沒關係 因為他們的用法不一樣
+   //裡面會傳進level這個東西數值
+   //這個數值會return我這個物件裡面的level這個東西,它是一個陣列
+   //我會把$level帶進來,然後把文字迴傳出去
+   //這樣我就不會有全域變數的問題了
+   //而且這個所有的資料庫都可以用
+   //這種物件導向方法在維護跟擴充上來說比較彈性
+   //p.s.這個做法在框架裡面會變得更變態，它會變得連屬性都可以使用..?
    public function level($level){
     return $this->level[$level];
 }
