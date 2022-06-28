@@ -176,15 +176,31 @@
                 break;
             case 2:
                 //縮放
-                now.hide(1000, function() {
-                    next.show(1000);
+                //第一個是你要改變的內容,第二個是時間
+                //我希望它在1秒之內寬度縮成0,高度縮成0,結束之後就把它藏起來
+                now.animate({width:0,height:0,top:130,left:105},1000,function(){
+                //藏起來
+                now.hide();
+                //下一張要把它秀出來
+                next.show();
+                //為了要讓它變大,所以要先讓它變小之後才能變大
+                next.css({width:0,height:0,top:130,left:105})
+                next.animate({width:210,height:260,top:0,left:0},1000,function(){});
                 });
                 break;
             case 3:
                 //滑入滑出,用回乎函式感覺比較好看一點
-                now.slideUp(1000, function() {
-                    next.slideDown(1000);
+                //從左邊滑出去,請在1秒內往左滑210之後隱藏回來
+                now.animate({left:-210},1000,function(){
+                now.hide();
+                //因為下張動畫之前它一定要在原位,所以css要在隱藏的狀態下歸位
+                now.css({width:210,height:260,top:0,left:0})
                 });
+                next.show();
+                //下一張要show出來之前要先把它定位
+                next.css({width:210,height:260,top:0,left:210})
+                // 下一張要執行時讓它left在0的位子
+                next.animate({left:0},1000);
                 break;
         }
     }
