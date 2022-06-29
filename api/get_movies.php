@@ -7,6 +7,8 @@ include_once "../base.php";
 // ↑這個條件式不需要分頁也不需要排序所以後面的條件可以刪除
 // 記得$today跟$ondate也要複製 
 
+$id=$_GET['id'];
+
 $today = date("Y-m-d");
 $ondate = date("Y-m-d", strtotime("-2 days"));
 
@@ -15,8 +17,11 @@ $movies = $Movie->all(" where `sh`=1 && `ondate` BETWEEN '$ondate' AND '$today'"
 //讓他插入到我們的電影裡面去
 foreach ($movies as $movie) {
     // 他會幫我們產生5部電影的清單,這個清單裡面要寫什麼呢?
-    //通常是放我電影裡面的$movie的id跟名稱
-    echo "<option value='{$movie['id']}'>{$movie['name']}</option>";
+    // 通常是放我電影裡面的$movie的id跟名稱
+    // 在我做選項前他要去比對,如果我的$movie['id']的id剛好等於我傳進來的這個$id
+    // 那就幫我呈現選中的狀態,不然的話就是空值的狀況
+    $selected=($movie['id']==$id)?"selected":"";
+    echo "<option value='{$movie['id']}' $selected>{$movie['name']}</option>";
     
 }
 
