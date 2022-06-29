@@ -38,8 +38,9 @@ for($i=0;$i<=$gap;$i++){
     //用strtotime轉的秒數,然後因為date後面要接的是秒數,用strtotime告訴他距離現在還有幾天
     //如果是0話表示是今天,1的話表示明天2表示後天
     $date=date("Y-m-d",strtotime("+$i days"));
+    $dateShow=date("m月d日 l",strtotime("+$i days"));
     //把值帶進去
-    echo "<option value='$date'>$date</option>";
+    echo "<option value='$date'>$dateShow</option>";
     // 他進會把東西丟到前端去了
 }
 

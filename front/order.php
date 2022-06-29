@@ -96,6 +96,19 @@
     $.get("api/get_days.php",{id},(days)=>{
         // 然後把days結果放到我的#date的那個選單(項目)裡面
         $("#date").html(days)
+        //選完日期之後去給我執行getSessions一次
+        getSessions();
+    })
+}
+
+function getSessions(){
+    //怎麼拿到sessions的資料?我們的資料表ord有拿到sessions
+    //只要你給我movie date sessions 我才有辦法幫你算訂單的資訊
+    let id=$("#movie").val(); //你現在選到的那部電影
+    let date=$("#date").val(); //你現在選的是哪一天的場次
+    // 我要帶id,date過去,他會回給我sessions場次資料
+    $.get("api/get_sessions.php",{id,date},(sessions)=>{
+        $("#session").html(sessions)
     })
 }
 
