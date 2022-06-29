@@ -43,11 +43,15 @@
 </div>
 <div class="row">
     <div class="ct" style="width:100%">
-        <button>確定</button><button>重置</button>
+        <button onclick="booking()">確定</button>
+        <button onclick="reset()">重置</button>
     </div>
     
 </div>
 </div>
+<!-- 這個div原本是沒有內容的,是我在booking的時候透過toggle的方式
+    去把它用ajax的方式把他抓回來用-->
+<div id="booking" style="display:none"></div>
 <script>
     //應該要有一個程式(=api)讓我可以拿到電影的東西,要帶什麼參數去呢?
     //原則上是不需要帶參數,我現在只是想把我所有可以訂的電影的票.....?
@@ -69,6 +73,39 @@
     getMovies(id)
     //觸發事件,當我的#movie發生改變的時候請去幫我執行getDays的程式
     $("#movie").on("change",()=>{getDays()})
+
+
+
+    function booking(){
+    $("#order,#booking").toggle() //做切換
+    // 用物件的方式把資料包進去
+    let order={id:$("#movie").val(),
+               date:$("#date").val(),
+               session:$("#session").val()}
+    //最後我會拿到整個booking的畫面,然後把這東西放到我的#booking裡面
+    $.get("api/booking.php",order,(booking)=>{
+        $("#booking").html(booking)
+    })
+    }
+
+    function reset(){
+        // 重製=還原我原本的狀態
+        // 回復狀態等於我重新去執行一次網址然後重新載入內容=getMovies的功能
+        // id是全域變數,他是一開始網頁載入時就訂在那個地方,我把它重新拿來用一遍
+        // 我的選單是連動式選單,把movie搞定了他就會去抓我的days跟session
+        getMovies(id)
+    }
+
+    // 回到上一步,你只要做一次booking他就會重新再做劃位的資料,這樣很傷系統
+    // 因為我回到上一步時根本就不需要再跑booking
+    // 所以我們把上一步跟確定的按鈕這兩個雖然視覺效果一樣
+    // 但還是要分開寫不要做多餘的事情
+    function prev(){
+        $("#order,#booking").toggle() //他要做的事情就是toggle
+        //除此之外他還要把booking的內容清空
+        $("#booking").html("");
+    }
+
 
     // 我要用帶值的方式
     // 帶一個id值進來,他決定了我的選單要選在什麼地方
