@@ -73,6 +73,8 @@
     getMovies(id)
     //觸發事件,當我的#movie發生改變的時候請去幫我執行getDays的程式
     $("#movie").on("change",()=>{getDays()})
+    //連動選單,#date改變之後我也要去getSessions(),日期改變之後要同步去抓我日期改變的Sessions
+    $("#date").on("change",()=>{getSessions()})
 
 
 
@@ -85,6 +87,11 @@
     //最後我會拿到整個booking的畫面,然後把這東西放到我的#booking裡面
     $.get("api/booking.php",order,(booking)=>{
         $("#booking").html(booking)
+
+        //(這些東西堅持要寫在order.php的話程式碼要這樣改)
+        //book有內容了再去註冊我裡面的每一個checked box
+        // $(".check").on('click',function(){
+        // console.log($(this.val()))
     })
     }
 
