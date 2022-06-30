@@ -26,6 +26,7 @@
     ABC影城票價全面八折優惠1個月
     </marquee>
   </div>
+  <div id="mm">
 <?php
 $do=$_GET['do']??'main';
 $file='front/'.$do.".php";
@@ -37,9 +38,8 @@ if(file_exists($file)){
   // 這樣的寫法可以避免如果有人想要去串別的值得話，他不會找到別的檔案，一定都會到main這邊來
   include 'front/main.php';
 }
-
-
 ?>
+ </div>
   <div id="bo"> ©Copyright 2010~2014 ABC影城 版權所有 </div>
 </div>
 </body>

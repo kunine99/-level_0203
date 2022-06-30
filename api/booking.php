@@ -3,6 +3,26 @@ include_once "../base.php";
 $movie=$Movie->find($_GET['id']);
 $date=$_GET['date'];
 $session=$ss[$_GET['session']];
+
+//上面只有把所有的狀態列出來,接下來要把幫我進到這個畫面的時候
+//先把所有被訂購的座位拿出來給我看
+//我這個場次的訂單有幾筆↓
+$ords=$Ord->all(['movie'=>$movie['name'],'date'=>$date,'session'=>$session]); 
+//↑這樣我就可以找到這個場次的所有訂單,接下來要把他的座位還原出來,並且把他變成陣列
+//先設一個空陣列,然後我要一筆筆的把他的訂單還原出來
+$seats=[];
+// 每一個座位都是$ord的['seat']但現在他是字串,我們要還原成陣列
+foreach($ords as $ord){
+    //我們用serialize存到資料庫,unserialize還原
+    //但單純還原陣列對我來說沒意義,我要把這三筆資料的陣列合併成一個
+    //合併陣列之後把它變成一個新的陣列
+    //array_merge把我現在的空陣列$seats去合併這一個放出來的陣列$ord['seat']
+    //所以$seats會先用一個空陣列跟第一筆資料合併,合併完之後會成為一個新陣列
+    //這時候陣列已經有兩個元素了,for迴圈第2次時,再去跟兩個元素的陣列合併變成4個
+    //然後再跟一個就變成五個,所以我可以用這樣的方式把所有的陣列再一個迴圈裡面合併再一起
+    //所以這個陣列裡面的東西就會是我們剛才很多筆資料還原出來的陣列
+   $seats=array_merge($seats,unserialize($ord['seat']));
+}
 ?>
 
 <style>
@@ -53,13 +73,20 @@ $session=$ss[$_GET['session']];
     <?php
     //我有20個座位(不寫=20是因為這樣會變成21個)
     for($i=0;$i<20;$i++){
-        echo "<div class='seat null'>";
+        //劃位做判斷,1.先檢查booked的狀況 in_array檢查我的$i有沒有在裡面,因為我的$i是0~19
+        //我座位的序號也是0~19,如果我的$i有在$seats裡面表示座位被訂走了,那我要呈現的class就叫做booked
+        $booked=in_array($i,$seats)?'booked':'null';
+        echo "<div class='seat $booked'>";
         echo "  <div class='ct'>";
         //(取除數,然後因為我最小是0,可是我最小是1,所以這邊要再加1). "排"
         //(算餘數+1  因為我從0開始算,所以我的第一個值都是0,0+1我就會得到這個幾號)."號"
         echo    (floor($i/5)+1). "排".($i%5 +1)."號";
         echo "  </div>";
-        echo "<input type='checkbox' name='check' class='check' value='$i'>";
+        // 如果我的座位$i不在$seats裡面,那表示還沒被訂走,所以畫面就可以show出來
+        //建議不要用隱藏的方式,不然有心人會用f12去測試點選
+        if(!in_array($i,$seats)){
+            echo "<input type='checkbox' name='check' class='check' value='$i'>";
+        }
         echo "</div>";
     }
     ?>
@@ -71,7 +98,7 @@ $session=$ss[$_GET['session']];
     <div>您已經勾選了<span id="tickets"></span>張票，最多可以購買四張票</div>
     <div>
         <button onclick="prev()">回上一步</button>
-        <button >完成訂購</button>
+        <button onclick="order()">完成訂購</button>
     </div>
 </div>
 
@@ -147,4 +174,50 @@ $(".check").on('click',function(){
     $("#tickets").text(seats.length)
 })
 
+// 訂購 要送的資料包誇電影日期場次等等
+function order(){
+    // 複製front/order.php 表單資訊多了座位seats
+    let order={id:$("#movie").val(),
+               date:$("#date").val(),
+               session:$("#session").val(),
+               seats}
+    // 送到後臺去做儲存的動作,改變資料表的話一般我們用post
+    //還有一個原因,js的陣列用get沒辦法送
+    //送order的資料,回給我result(除了結果,api還要幫我產生訂購完成的畫面)
+    $.post('api/order.php',order,(result)=>{
+        // result幫我蓋過去#mm
+        $("#mm").html(result)
+    })
+}
 </script>
+
+
+
+<!-- 我們資料選完之後接下來就是要把他送到後台去
+然後把它存到我們的訂單資訊裡面
+訂單編號前8碼就是我們的y-m-b但是不要有那個-
+用ID的方式產生流水號可是他要4碼所以我們要補0
+我們位子是用js寫完之後產生1個陣列傳到後台，
+請問陣列可以存到資料庫裡面嗎？陣列是沒有辦法直接存到資料庫裡面的
+所以我們要想個方法，把陣列轉成字串然後存到資料庫裡面去
+
+目前目前學的方法有什麼能把陣列轉成字串
+1.implode，我們在base檔裡面用了很多implode的方法，把陣列改成可用某個像是符號或是逗號串起來的自串
+所以implode可以幫我們把陣列串成字串
+2.我們在講API的時候有稍微提到json encode，他也可以把陣列轉成字串的樣子，
+不過他字串的形式各格式會比較特別，我們在講session的時候直接開type檔起來看，他前面會告訴你i還是s、多少長度，
+然後他是用一個特殊符號把它分開的字串地形勢這些方法都可以把它轉成字串存到資料庫
+
+但是用這些方法存到資料庫就要記得把它拿出來時就要再把它從字串轉成陣列來使用
+因為我們只是為了要放到資料庫去，所以用轉成字串的方式，
+但是用的時候還是要記得再用同樣的方式把他轉回陣列來使用
+目前業界比較常用的方式有兩個
+1.json encode是比較常用的方式
+2.implide方式不太會用，會被笑
+
+一個是用json encode，他在一些PHP比較新的框架中比較常用，
+因為它可以把它轉回來之後直接丟給js用，
+所以你的開發應用是偏向api方面的話用Jackson encode轉成字串丟進去就可以了
+出來之後就用Json_decode的方式他就會變成陣列了 
+一個是用serialize 意思是序列化(一個個東西排排站的意思)
+-->
